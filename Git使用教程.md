@@ -8,7 +8,7 @@
 
 （https://www.runoob.com/w3cnote/git-guide.html）这是简明的git教程
 
-1.git的结构图
+git的结构图
 
 ![img](https://upload-images.jianshu.io/upload_images/14329037-157479f50f6997e4.png?imageMogr2/auto-orient/strip|imageView2/2/w/666/format/webp)
 
@@ -27,6 +27,10 @@ Git 的工作流程一般是：
 3. 将暂存区域的文件提交到 Git 仓库。
 
 因此，Git 管理的文件有三种状态：已修改（modified）、已暂存（staged）和已提交（committed），依次对应上边的每一个流程。
+
+
+
+### Git 入门教程
 
 
 
@@ -140,3 +144,115 @@ commit id就是前面那一串很长的十六进制数，就是我们的提交�
 
 如果你已经提交到了远程版本库...那你💊
 
+
+
+删除文件：
+
+rm <文件名>
+
+输入git status，可以看到git对修改作出了反应
+
+此时，你有两个选择：
+
+1.你选择从git的版本库删除这个文件
+
+输入git rm和git commit，可以成功提交删除（从这里可以看出git保存的其实是修改）
+
+2.你错误删除了文件
+
+使用git checkout -- <filename>恢复文件
+
+checkout命令实际上就是用版本库里面的最新文件替代工作区的文件
+
+
+
+### Git进阶（远程仓库）
+
+以github为例子
+
+首先创造一个github账号和仓库
+
+在本地产生ssh钥匙，在github账号中添加
+
+下一步，将本地仓库和远程仓库关联起来
+
+（我输入的是：git remote add origin git@github.com:geigeiwen/git.git）
+
+然后就可以进行推送了
+
+第一次推送到远程库，输入git push -u origin master，加上-u是把远程的master分支和本地的master分支关联起来
+
+之后就可以通过git push origin master来不断推送远程库了
+
+
+
+反过来，我们可以从远程库克隆到本地，再进行查询与编辑，之后提交到远程
+
+git clone git@github.com:michaelliao/gitskills.git
+
+
+
+#### 创建分支
+
+git最终产生的结果由分支和主线来组成，git鼓励用户产生很多分支，最终合并成一个主线
+
+首先我们创造一个新的分支并切换到那个分支：
+
+git checkout -b dev
+
+约等于
+
+git branch dev
+git checkout dev
+
+切换成功后可以在另一个分支下面进行修改（往往这样更加安全）
+
+使用git checkout  <branchname>可以切换到不同的分支
+
+事实上
+
+也可以用switch命令
+
+例如创建并切换到新的分支上：
+
+git switch -b dev
+
+之后就可以使用：git switch dev 切换到dev分支上
+
+这样更加自然
+
+最后进行合并，我们切换到master分支上，输入命令：git merge <branchname>从而可以把支线合并到主线之上
+
+**注意**可能出现问题，比如在支线只做了修改而没有进行add和commit，就会报错Already up to date
+
+![image-20200829191746406](/home/lkw/snap/typora/6/.config/Typora/typora-user-images/image-20200829191746406.png)
+
+合并成功
+
+Fast-forward 是一种快进合并方式
+
+合并结束后输入git branch -d dev，成功删除dev分支
+
+**注意**
+
+当master和dev都有新的提交（比如各自修改并commit了一个readme版本）的时候，强行进行merge会有风险，此时我们应该手动进行修改
+
+![image-20200829192603708](/home/lkw/snap/typora/6/.config/Typora/typora-user-images/image-20200829192603708.png)
+
+转化为以下的图形：
+
+![image-20200829192635898](/home/lkw/snap/typora/6/.config/Typora/typora-user-images/image-20200829192635898.png)
+
+这样就可以合并了
+
+输入命令：git log --graph可以看到分支的合并和拆分情况
+
+
+
+合并也可以不采用fast模式，因为这样会消除合并的历史
+
+我们采用以下的输入：
+
+![image-20200829193536326](/home/lkw/snap/typora/6/.config/Typora/typora-user-images/image-20200829193536326.png)
+
+加上--no-ff和备注""之后，就可以保留合并的历史了
